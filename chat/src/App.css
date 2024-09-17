@@ -1,0 +1,141 @@
+/* Основной контейнер приложения */
+.chat-app {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+/* Сайдбар */
+.chat-app__sidebar {
+  width: 25%;
+  background-color: #f4f4f4;
+  border-right: 1px solid #ddd;
+  padding: 10px;
+}
+
+.chat-app__title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.chat-app__add-chat {
+  background-color: #33cc33;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+}
+
+.chat-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.chat-list__item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.chat-list__item:hover {
+  background-color: #e0e0e0;
+}
+
+.chat-list__item--selected {
+  background-color: #d1e7ff;
+  border-left: 4px solid #007bff;
+}
+
+.chat-list__item-name {
+  font-weight: bold;
+}
+
+.chat-list__item-last-message {
+  color: #666;
+  font-size: 12px;
+}
+
+/* Окно чата */
+.chat-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.chat-window__header {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.chat-window__title {
+  font-size: 20px;
+}
+
+.chat-window__messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.chat-window__message {
+  margin-bottom: 10px;
+}
+
+.chat-window__message-sender {
+  font-weight: bold;
+}
+
+.chat-window__message-timestamp {
+  color: #888;
+  font-size: 12px;
+}
+
+.chat-window__input-container {
+  display: flex;
+  margin-top: 10px;
+}
+
+.chat-window__input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.chat-window__send-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.chat-window__send-button:hover {
+  background-color: #0056b3;
+}
+
+.chat-window__no-messages {
+  color: #888;
+  text-align: center;
+}
+
+.chat-window__empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 18px;
+  color: #888;
+}
