@@ -58,7 +58,7 @@ const ChatApp = () => {
         />
       ) : (
         <div className="chat-window__empty">
-          <p>Выберите чат для отправки сообщений</p>
+          <p>Создайте чат для отправки сообщений</p>
         </div>
       )}
       {showModal && (
