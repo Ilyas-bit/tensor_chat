@@ -1,11 +1,9 @@
-/* Основной контейнер приложения */
 .chat-app {
   display: flex;
   height: 100vh;
   font-family: "Arial", sans-serif;
 }
 
-/* Сайдбар */
 .chat-app__sidebar {
   width: 25%;
   background-color: #f4f4f4;
@@ -122,9 +120,11 @@
 }
 
 .chat-window__message-content {
-  max-width: 80%;
+  max-width: 800px;
   padding: 10px;
   border-radius: 4px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .chat-window__message--incoming .chat-window__message-content {
@@ -138,6 +138,10 @@
   border: 1px solid #0056b3;
 }
 
+.chat-window__message--incoming .chat-window__message-content,
+.chat-window__message--outgoing .chat-window__message-content {
+  white-space: normal;
+}
 .chat-window__message-sender {
   font-weight: bold;
 }
