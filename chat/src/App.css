@@ -2,7 +2,7 @@
 .chat-app {
   display: flex;
   height: 100vh;
-  font-family: Arial, sans-serif;
+  font-family: "Arial", sans-serif;
 }
 
 /* Сайдбар */
@@ -27,24 +27,31 @@
   height: 40px;
   font-size: 24px;
   cursor: pointer;
-  display: block;
   margin: 0 auto;
 }
 
 .chat-list {
-  list-style: none;
+  list-style-type: none;
   padding: 0;
   margin-top: 10px;
 }
 
 .chat-list__item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   padding: 10px;
   border-bottom: 1px solid #ddd;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .chat-list__item:hover {
   background-color: #e0e0e0;
+}
+
+.chat-list__item-bottom {
+  display: flex;
 }
 
 .chat-list__item--selected {
@@ -55,15 +62,29 @@
 .chat-list__item-name {
   font-weight: bold;
 }
+.chat-list__item-bottom {
+  display: flex;
+  justify-content: space-between;
+}
 
 .chat-list__item-last-message {
+  margin: 0;
+  max-width: 50%;
   color: #666;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-list__item-timestamp {
+  color: #888;
   font-size: 12px;
 }
 
 /* Окно чата */
 .chat-window {
-  flex: 1;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -82,13 +103,39 @@
 .chat-window__messages {
   flex-grow: 1;
   overflow-y: auto;
-  list-style: none;
   padding: 0;
   margin: 0;
+  list-style-type: none;
 }
 
 .chat-window__message {
   margin-bottom: 10px;
+  display: flex;
+}
+
+.chat-window__message--incoming {
+  justify-content: flex-start;
+}
+
+.chat-window__message--outgoing {
+  justify-content: flex-end;
+}
+
+.chat-window__message-content {
+  max-width: 80%;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.chat-window__message--incoming .chat-window__message-content {
+  background-color: #f1f1f1;
+  border: 1px solid #ddd;
+}
+
+.chat-window__message--outgoing .chat-window__message-content {
+  background-color: #007bff;
+  color: white;
+  border: 1px solid #0056b3;
 }
 
 .chat-window__message-sender {
@@ -98,6 +145,7 @@
 .chat-window__message-timestamp {
   color: #888;
   font-size: 12px;
+  margin-left: 8px;
 }
 
 .chat-window__input-container {
@@ -120,6 +168,7 @@
   border-radius: 4px;
   cursor: pointer;
   margin-left: 10px;
+  transition: background-color 0.2s ease;
 }
 
 .chat-window__send-button:hover {

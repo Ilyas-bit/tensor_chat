@@ -1,40 +1,37 @@
 import React, { useState, useEffect } from "react";
-import useChatStore from "./store/useChatStore"; // Убедитесь, что путь правильный
+import useChatStore from "./store/useChatStore";
 import ContactModal from "./components/ContactModal";
-import "./App.css"; // Подключаем файл стилей
+import "./App.css";
 
 const ChatApp = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [messageText, setMessageText] = useState("");
-  const [showModal, setShowModal] = useState(false); // Состояние для отображения модального окна
-  const user = "user1"; // Один пользователь, от имени которого отправляются сообщения
+  const [showModal, setShowModal] = useState(false);
+  const user = "user1";
 
-  const { chats, addChat, addMessage } = useChatStore();
+  const { chats, addChat, addMessage, updateChatOrder } = useChatStore();
 
-  // Функция для отправки сообщения в выбранный чат
   const handleSendMessage = () => {
     if (selectedChat && messageText) {
       addMessage(selectedChat.id, user, messageText);
-      setMessageText(""); // Очищаем поле ввода после отправки сообщения
+      setMessageText("");
+
+      updateChatOrder(selectedChat.id);
     }
   };
 
-  // Эффект для установки первого чата по умолчанию
   useEffect(() => {
     if (chats.length > 0 && !selectedChat) {
-      setSelectedChat(chats[0]); // Выбираем первый чат по умолчанию
+      setSelectedChat(chats[0]);
     }
   }, [chats, selectedChat]);
 
-  // Эффект для обновления истории сообщений при изменении выбранного чата
   useEffect(() => {
     if (selectedChat) {
-      // Проверяем, что выбранный чат все еще существует
       const chat = chats.find((chat) => chat.id === selectedChat.id);
       if (chat) {
         setSelectedChat(chat);
       } else {
-        // Если выбранный чат удален, сбрасываем выбор
         setSelectedChat(null);
       }
     }
@@ -59,12 +56,24 @@ const ChatApp = () => {
               }`}
               onClick={() => setSelectedChat(chat)}
             >
-              <p className="chat-list__item-name">{chat.name}</p>
-              {chat.messages.length > 0 && (
-                <p className="chat-list__item-last-message">
-                  {chat.messages[chat.messages.length - 1].text}
-                </p>
-              )}
+              <div className="chat-list__item-content">
+                <p className="chat-list__item-name">{chat.name}</p>
+                {chat.messages.length > 0 && (
+                  <div className="chat-list__item-bottom">
+                    <p className="chat-list__item-last-message">
+                      {chat.messages[chat.messages.length - 1].text}{" "}
+                    </p>
+                    <span className="chat-list__item-timestamp">
+                      {new Date(
+                        chat.messages[chat.messages.length - 1].timestamp
+                      ).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
+                )}
+              </div>
             </li>
           ))}
         </ul>
@@ -79,19 +88,33 @@ const ChatApp = () => {
               <p className="chat-window__no-messages">Нет сообщений</p>
             ) : (
               selectedChat.messages.map((message) => (
-                <li className="chat-window__message" key={message.id}>
-                  <strong className="chat-window__message-sender">
-                    {message.sender}:
-                  </strong>
-                  {message.text}{" "}
-                  <em className="chat-window__message-timestamp">
-                    ({new Date(message.timestamp).toLocaleTimeString()})
-                  </em>
+                <li
+                  className={`chat-window__message ${
+                    message.sender === user
+                      ? "chat-window__message--outgoing"
+                      : "chat-window__message--incoming"
+                  }`}
+                  key={message.id}
+                >
+                  <div className="chat-window__message-content">
+                    <strong className="chat-window__message-sender">
+                      {message.sender}:
+                    </strong>
+                    {message.text}{" "}
+                    <em className="chat-window__message-timestamp">
+                      (
+                      {new Date(message.timestamp).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                      )
+                    </em>
+                  </div>
                 </li>
               ))
             )}
           </ul>
-          <div className="chat-window__input-container">
+          <form className="chat-window__input-container">
             <input
               className="chat-window__input"
               type="text"
@@ -105,7 +128,7 @@ const ChatApp = () => {
             >
               Отправить
             </button>
-          </div>
+          </form>
         </div>
       ) : (
         <div className="chat-window__empty">

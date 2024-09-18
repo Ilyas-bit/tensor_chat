@@ -1,57 +1,86 @@
 import { create } from "zustand";
 import { v4 as uuidv4 } from "uuid";
 
-// Пример предустановленных сообщений
 const defaultMessages = [
   { sender: "user1", text: "Привет!" },
   { sender: "user2", text: "Здравствуйте!" },
   { sender: "user1", text: "Как ваши дела?" },
 ];
 
-const useChatStore = create((set) => ({
-  chats: [], // Список чатов
+const loadFromLocalStorage = () => {
+  const storedState = localStorage.getItem("chatStore");
+  return storedState ? JSON.parse(storedState) : { chats: [] };
+};
 
-  // Функция для добавления нового чата
+const saveToLocalStorage = (state) => {
+  localStorage.setItem("chatStore", JSON.stringify(state));
+};
+
+const useChatStore = create((set) => ({
+  ...loadFromLocalStorage(),
+
   addChat: (name) => {
     set((state) => {
-      // Создаем новый чат с предустановленными сообщениями
       const newChat = {
-        id: uuidv4(), // Уникальный ID для чата
-        name: name, // Имя контакта/чата
+        id: uuidv4(),
+        name: name,
         messages: defaultMessages.map((message) => ({
-          id: uuidv4(), // Уникальный ID для каждого сообщения
+          id: uuidv4(),
           sender: message.sender,
           text: message.text,
-          timestamp: Date.now(), // Время отправки
+          timestamp: Date.now(),
         })),
       };
 
-      return {
+      const newState = {
         chats: [...state.chats, newChat],
       };
+
+      saveToLocalStorage(newState);
+      return newState;
     });
   },
 
-  // Функция для добавления сообщения в чат
   addMessage: (chatId, sender, text) => {
-    set((state) => ({
-      chats: state.chats.map((chat) =>
-        chat.id === chatId
-          ? {
-              ...chat,
-              messages: [
-                ...chat.messages,
-                {
-                  id: uuidv4(), // Уникальный ID для каждого сообщения
-                  sender, // Кто отправил сообщение
-                  text, // Текст сообщения
-                  timestamp: Date.now(), // Время отправки
-                },
-              ],
-            }
-          : chat
-      ),
-    }));
+    set((state) => {
+      const newState = {
+        chats: state.chats.map((chat) =>
+          chat.id === chatId
+            ? {
+                ...chat,
+                messages: [
+                  ...chat.messages,
+                  {
+                    id: uuidv4(),
+                    sender,
+                    text,
+                    timestamp: Date.now(),
+                  },
+                ],
+              }
+            : chat
+        ),
+      };
+
+      saveToLocalStorage(newState);
+      return newState;
+    });
+  },
+
+  updateChatOrder: (chatId) => {
+    set((state) => {
+      const chatIndex = state.chats.findIndex((chat) => chat.id === chatId);
+      if (chatIndex === -1) return state;
+
+      const [chat] = state.chats.splice(chatIndex, 1);
+
+      const newState = {
+        chats: [chat, ...state.chats],
+      };
+
+      saveToLocalStorage(newState);
+      return newState;
+    });
   },
 }));
 
